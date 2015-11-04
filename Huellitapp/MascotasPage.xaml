@@ -5,44 +5,87 @@
     xmlns:local="using:Huellitapp"
     xmlns:models="using:Huellitapp.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    
-    
-    
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
     mc:Ignorable="d">
 
     <Grid  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <GridView                    
-                    x:Name="grid"
-                    ItemsSource="{x:Bind Mascotas}"            
-                    >
-            
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="models:Mascota">
-                    <RelativePanel Width="130" Height="130" Margin="10">
-                        <Rectangle Width="130" Height="130">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="{x:Bind Url}" Stretch="UniformToFill"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
 
-                        <StackPanel Background="#99000000"
+        <Pivot
+            Title="Mascotas"
+            >
+            <PivotItem
+                Header="Adultos"
+                >
+                <GridView                    
+                    x:Name="gridMascotasAdultas"
+                    ItemsSource="{x:Bind MascotasAdultos}" 
+                    SelectionChanged="seleccionarMascota"                    
+                    >
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Mascota">
+                            <RelativePanel Width="130" Height="130" Margin="10">
+                                <Rectangle Width="130" Height="130">
+                                    <Rectangle.Fill>
+                                        <ImageBrush ImageSource="{x:Bind Fotos[0].Url}" Stretch="UniformToFill"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+
+                                <StackPanel Background="#99000000"
                                             RelativePanel.AlignBottomWithPanel="True"
                                             Padding="4"
                                             >
-                            <TextBlock  Width="130" 
+                                    <TextBlock  Width="130" 
                                          
                                          Text="{x:Bind Nombre}"
                                          Foreground="White"
                                          />
-                        </StackPanel>
-                    </RelativePanel>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        <Button
-            
-            Content="agregar" Click="agregar"/>
+                                </StackPanel>
+                            </RelativePanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+            </PivotItem>
+
+            <PivotItem
+                Header="Cachorros"
+                >
+
+                <GridView                    
+                    x:Name="gridMascotasCachorros"
+                    ItemsSource="{x:Bind MascotasCachorros}"            
+                    >
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Mascota">
+                            <RelativePanel Width="130" Height="130" Margin="10">
+                                <Rectangle Width="130" Height="130">
+                                    <Rectangle.Fill>
+                                        <ImageBrush ImageSource="{x:Bind Fotos[0].Url}" Stretch="UniformToFill"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+
+                                <StackPanel Background="#99000000"
+                                            RelativePanel.AlignBottomWithPanel="True"
+                                            Padding="4"
+                                            >
+                                    <TextBlock  Width="130" 
+                                         
+                                         Text="{x:Bind Nombre}"
+                                         Foreground="White"
+                                         />
+                                </StackPanel>
+                            </RelativePanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+            </PivotItem>           
+
+        </Pivot>
+        
+        
     </Grid>
 </Page>

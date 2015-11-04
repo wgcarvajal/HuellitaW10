@@ -105,8 +105,9 @@
     <Compile Include="MascotasPage.xaml.cs">
       <DependentUpon>MascotasPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\FotoMascota.cs" />
     <Compile Include="Models\Mascota.cs" />
-    <Compile Include="Models\MascotaParse.cs" />
+    <Compile Include="Models\MenuItem.cs" />
     <Compile Include="PrincipalPage.xaml.cs">
       <DependentUpon>PrincipalPage.xaml</DependentUpon>
     </Compile>

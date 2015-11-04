@@ -29,53 +29,128 @@ namespace Huellitapp
     public sealed partial class MascotasPage : Page
     {
         private Frame rootFrame;
-       
-        
+        private ObservableCollection<Mascota> mascotasAdultos;
+        private ObservableCollection<Mascota> mascotasCachorros;
+
+
         public MascotasPage()
         {
             this.InitializeComponent();            
             rootFrame = Window.Current.Content as Frame;
+            gridMascotasAdultas.SelectedIndex = -1;
         }
 
-        private ObservableCollection<Mascota> mascotas;
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            mascotaSelecionada= e.Parameter as IMascotaSeleccionada;
+        }
 
-        public ObservableCollection<Mascota> Mascotas
+        public interface IMascotaSeleccionada
+        {
+            void mascotaSeleccionada(Mascota mascota);
+        }
+
+        IMascotaSeleccionada mascotaSelecionada;
+
+        public ObservableCollection<Mascota> MascotasAdultos
         {
             get
             {
-                if (mascotas == null)
+                if (mascotasAdultos == null)
                 {
-                    mascotas = new ObservableCollection<Mascota>();
-                    loadData();
+                    mascotasAdultos = new ObservableCollection<Mascota>();
+                    loadDataAdultos();
                 }
-                return mascotas;
+                return mascotasAdultos;
             }
             set
             {
-                mascotas = value;
+                mascotasAdultos = value;
 
             }
         }
 
-        private async void loadData()
+        public ObservableCollection<Mascota> MascotasCachorros
+        {
+            get
+            {
+                if (mascotasCachorros == null)
+                {
+                    mascotasCachorros = new ObservableCollection<Mascota>();
+                    loadDataCachorros();
+                }
+                return mascotasCachorros;
+            }
+            set
+            {
+                mascotasCachorros = value;
+
+            }
+        }
+
+        private async void loadDataAdultos()
         {
 
-            var query = ParseObject.GetQuery(MascotaParse.TABLA);            
-            IEnumerable<ParseObject> results = await query.FindAsync();            
+            var query = ParseObject.GetQuery(Mascota.TABLA)
+            .WhereEqualTo(Mascota.TIPO,"Adultos");
+            IEnumerable<ParseObject> results = await query.FindAsync();                        
             foreach(ParseObject parseObject in results)
             {
                 Mascota mascota = new Mascota();
-                var queryfoto= ParseObject.GetQuery("fotomascota")
-                .WhereEqualTo("mascota", parseObject.ObjectId);
+                var queryfoto= ParseObject.GetQuery(FotoMascota.TABLA)
+                .WhereEqualTo(FotoMascota.IDMASCOTA, parseObject.ObjectId);
                 IEnumerable<ParseObject> fotos = await queryfoto.FindAsync();
-                ParseObject foto = fotos.ElementAt<ParseObject>(0);
-                var applicantResumeFile = foto.Get<ParseFile>("foto");
-                mascota.Url = applicantResumeFile.Url.OriginalString;
-                mascota.Nombre = (String )parseObject["masnombre"];
-                mascotas.Add(mascota);
+                ObservableCollection<FotoMascota> fotosMascotas = new ObservableCollection<FotoMascota>();
+                foreach (ParseObject foto in fotos)
+                {
+                    FotoMascota fotoMascota = new FotoMascota();
+                    fotoMascota.Id = foto.ObjectId;
+                    fotoMascota.IdMascota = (string)foto[FotoMascota.IDMASCOTA];
+                    fotoMascota.Url = foto.Get<ParseFile>(FotoMascota.IMAGEN).Url.OriginalString;
+                    fotosMascotas.Add(fotoMascota);
+                }
+                mascota.Nombre = (String )parseObject[Mascota.NOMBRE];
+                mascota.Tipo = (string)parseObject[Mascota.TIPO];
+                mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
+                mascota.Id = parseObject.ObjectId;
+                mascota.Fotos = fotosMascotas;               
+                mascotasAdultos.Add(mascota);
             }            
             
-        }       
+        }
+
+        private async void loadDataCachorros()
+        {
+
+            var query = ParseObject.GetQuery(Mascota.TABLA)
+            .WhereEqualTo(Mascota.TIPO, "Cachorros");
+            IEnumerable<ParseObject> results = await query.FindAsync();
+            foreach (ParseObject parseObject in results)
+            {
+                Mascota mascota = new Mascota();
+                var queryfoto = ParseObject.GetQuery(FotoMascota.TABLA)
+                .WhereEqualTo(FotoMascota.IDMASCOTA, parseObject.ObjectId);
+                IEnumerable<ParseObject> fotos = await queryfoto.FindAsync();
+                ObservableCollection<FotoMascota> fotosMascotas = new ObservableCollection<FotoMascota>();
+                foreach (ParseObject foto in fotos)
+                {
+                    FotoMascota fotoMascota = new FotoMascota();
+                    fotoMascota.Id = foto.ObjectId;
+                    fotoMascota.IdMascota = (string)foto[FotoMascota.IDMASCOTA];
+                    fotoMascota.Url = foto.Get<ParseFile>(FotoMascota.IMAGEN).Url.OriginalString;
+                    fotosMascotas.Add(fotoMascota);
+                }
+                mascota.Nombre = (String)parseObject[Mascota.NOMBRE];
+                mascota.Tipo = (string)parseObject[Mascota.TIPO];
+                mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
+                mascota.Id = parseObject.ObjectId;
+                mascota.Fotos = fotosMascotas;
+                mascotasCachorros.Add(mascota);
+            }
+
+        }
+
+
 
         private void logout(object sender, RoutedEventArgs e)
         {
@@ -83,12 +158,15 @@ namespace Huellitapp
             rootFrame.Navigate(typeof(MainPage));
         }
 
-        private void agregar(object sender, RoutedEventArgs e)
+        private void seleccionarMascota(object sender, SelectionChangedEventArgs e)
         {
-            Mascota mascota = new Mascota();
-            mascota.Url = "http://www.masimagenesbonitas.com/wp-content/uploads/2015/08/u-saludito.jpg";
-            mascota.Nombre = "pruebita";
-            mascotas.Add(mascota);
+            if(gridMascotasAdultas.SelectedIndex !=-1)
+            {
+                Mascota mascota = new Mascota();
+                mascota.Nombre = "benito";
+                mascotaSelecionada.mascotaSeleccionada(mascotasAdultos.ElementAt(gridMascotasAdultas.SelectedIndex));
+            }
+            
         }
     }
 }

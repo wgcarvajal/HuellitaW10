@@ -36,7 +36,7 @@ namespace Huellitapp
         {
             if (ParseUser.CurrentUser != null)
             {
-                rootFrame.Navigate(typeof(MascotasPage));
+                rootFrame.Navigate(typeof(PrincipalPage));
             }
         }
         
@@ -47,7 +47,7 @@ namespace Huellitapp
             try
             {
                 await ParseUser.LogInAsync(user.Text, pass.Text);
-                rootFrame.Navigate(typeof(MascotasPage));
+                rootFrame.Navigate(typeof(PrincipalPage));
 
             }
             catch (Exception exception)

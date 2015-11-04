@@ -5,4 +5,10 @@
     xmlns:local="using:Huellitapp"
     RequestedTheme="Dark">
 
+    <Application.Resources>
+        <Style TargetType="ListBoxItem" x:Key="MenuItemStyle">
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </Application.Resources>
+
 </Application>
