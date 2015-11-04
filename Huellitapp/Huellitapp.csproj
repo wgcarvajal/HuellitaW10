@@ -106,6 +106,10 @@
       <DependentUpon>MascotasPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Mascota.cs" />
+    <Compile Include="Models\MascotaParse.cs" />
+    <Compile Include="PrincipalPage.xaml.cs">
+      <DependentUpon>PrincipalPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +138,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MascotasPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrincipalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

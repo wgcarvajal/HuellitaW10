@@ -8,5 +8,8 @@ namespace Huellitapp.Models
 {
     public class Mascota
     {
+        public string Nombre { get; set; }
+
+        public string Url { get; set; }
     }
 }

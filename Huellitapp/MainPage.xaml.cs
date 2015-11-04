@@ -29,7 +29,7 @@ namespace Huellitapp
             this.InitializeComponent();
             this.Loaded += MainPage_Loaded;
             rootFrame = Window.Current.Content as Frame;
-            hayLogin();
+            
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -39,11 +39,7 @@ namespace Huellitapp
                 rootFrame.Navigate(typeof(MascotasPage));
             }
         }
-
-        public void hayLogin()
-        {
-
-        }
+        
 
         private async void iniciarSesion(object sender, RoutedEventArgs e)
         {
