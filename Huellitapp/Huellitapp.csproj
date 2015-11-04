@@ -102,8 +102,17 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mapa.xaml.cs">
+      <DependentUpon>Mapa.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MascotaPage.xaml.cs">
+      <DependentUpon>MascotaPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MascotasPage.xaml.cs">
       <DependentUpon>MascotasPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MisMascotasPage.xaml.cs">
+      <DependentUpon>MisMascotasPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\FotoMascota.cs" />
     <Compile Include="Models\Mascota.cs" />
@@ -138,7 +147,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Mapa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MascotaPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MascotasPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MisMascotasPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

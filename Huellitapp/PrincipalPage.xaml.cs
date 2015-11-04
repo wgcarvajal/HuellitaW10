@@ -1,4 +1,5 @@
 ﻿using Huellitapp.Models;
+using Parse;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -20,18 +22,39 @@ using Windows.UI.Xaml.Navigation;
 namespace Huellitapp
 {
    
-    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada
+    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada, MisMascotasPage.IPrincipalPage
     {
+        private Frame rootFrame;
+
+        public interface IQuitarSeleccion
+        {
+            void setQuitarSeleccion();
+        }
+
+        IQuitarSeleccion quitarSeleccion;
+
         public PrincipalPage()
         {
             this.InitializeComponent();
-            this.Loaded += PrincipalPage_Loaded;           
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            Loaded += PrincipalPage_Loaded;            
+            Contenido.Navigate(typeof(MascotasPage), this);           
+            rootFrame = Window.Current.Content as Frame;
         }
 
         private void PrincipalPage_Loaded(object sender, RoutedEventArgs e)
         {
-            Contenido.Navigate(typeof(MascotasPage),this);
+            if(menu.SelectedIndex==-1 || menu.SelectedIndex==4)
+            {
+                menu.SelectedIndex = 0;
+            }            
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+            quitarSeleccion.setQuitarSeleccion();
+        }        
 
         private ObservableCollection<MenuItem> menuList;
 
@@ -43,18 +66,17 @@ namespace Huellitapp
                 {
                     menuList = new ObservableCollection<MenuItem>();
 
-                    MenuItem item = new MenuItem() { Name = "Favoritos", Icon = "Favorite" };
-                    MenuItem item1 = new MenuItem() { Name = "Halloween", Icon = "Emoji2" };
+                    MenuItem item = new MenuItem() { Name = "Inicio", Icon = "Home" };
+                    MenuItem item1 = new MenuItem() { Name = "Mis publicaciones", Icon = "Emoji2" };
                     MenuItem item2 = new MenuItem() { Name = "Recientes", Icon = "Camera" };
                     MenuItem item3 = new MenuItem() { Name = "Mapa", Icon = "Map" };
-                    MenuItem item4 = new MenuItem() { Name = "Calendario", Icon = "Calendar" };
+                    MenuItem item4 = new MenuItem() { Name = "Cerrar sesión", Icon = "ClosePane" };        
 
                     menuList.Add(item);
                     menuList.Add(item1);
                     menuList.Add(item2);
                     menuList.Add(item3);
                     menuList.Add(item4);
-
                 }
                 return menuList;
             }
@@ -70,17 +92,72 @@ namespace Huellitapp
 
         }
 
-        public void mascotaSeleccionada(Mascota mascota)
+        public void setMascotaSeleccionada(Mascota mascota)
         {
-            mostrarDialogo(mascota);
-           
+            rootFrame.Navigate(typeof(MascotaPage),mascota);
         }
 
-        public async void mostrarDialogo(Mascota m)
+        public void setGridview(IQuitarSeleccion interfaz)
         {
-            var dlg = new Windows.UI.Popups.MessageDialog("Nombre Mascota :"+m.Nombre);
-            //dlg.Title = "Mensaje";
-            await dlg.ShowAsync();
+            quitarSeleccion = interfaz;           
+        }
+
+        private void seleccionMenu(object sender, SelectionChangedEventArgs e)
+        {
+            switch(menu.SelectedIndex)
+            {
+                case 0:
+                    Contenido.Navigate(typeof(MascotasPage), this);
+                    paginaPrincipal.BottomAppBar = null;
+                break;
+                case 1:
+                    Contenido.Navigate(typeof(MisMascotasPage),this);
+                    CommandBar commandBar = new CommandBar();
+                    AppBarButton appBarButton = new AppBarButton();
+                    appBarButton.Icon =new SymbolIcon(Symbol.Add);
+                    appBarButton.Label = "Agregar";
+                    commandBar.PrimaryCommands.Add(appBarButton);
+                    paginaPrincipal.BottomAppBar = commandBar;
+                break;
+                case 4:
+                    ParseUser.LogOut();
+                    rootFrame.Navigate(typeof(MainPage));
+                break;
+            }           
+        }
+
+        public void quitarAppBarButton()
+        {
+            paginaPrincipal.BottomAppBar = null;
+        }
+
+        public void ponerAppBarButton()
+        {
+            CommandBar commandBar = new CommandBar();
+            AppBarButton appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Add);
+            appBarButton.Label = "Agregar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            paginaPrincipal.BottomAppBar = commandBar;
+        }
+        
+
+        public void seleccionarMascotaActiva()
+        {            
+            CommandBar commandBar = new CommandBar();
+            AppBarButton appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Add);
+            appBarButton.Label = "Agregar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Delete);
+            appBarButton.Label = "Eliminar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Edit);
+            appBarButton.Label = "Editar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            paginaPrincipal.BottomAppBar = commandBar;
         }
     }
 }

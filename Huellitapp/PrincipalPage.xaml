@@ -1,4 +1,5 @@
 ﻿<Page
+    x:Name="paginaPrincipal"
     x:Class="Huellitapp.PrincipalPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <SplitView
@@ -32,11 +33,10 @@
                     <ListBox x:Name="menu"
                              ItemsSource="{x:Bind MenuList}"
                              Background="Transparent"
-                             ItemContainerStyle="{StaticResource MenuItemStyle}"                          
-                             
+                             ItemContainerStyle="{StaticResource MenuItemStyle}" 
+                             SelectionChanged="seleccionMenu"                             
                              >
-
-                        <ListBox.ItemTemplate>
+                        <ListBox.ItemTemplate >
                             <DataTemplate x:DataType="models:MenuItem">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="{x:Bind Icon}" 
@@ -50,15 +50,12 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-
                     </ListBox>
                 </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
                 <Frame x:Name="Contenido"/>
             </SplitView.Content>
-
         </SplitView>
-
     </Grid>
 </Page>

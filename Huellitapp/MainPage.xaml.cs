@@ -38,8 +38,7 @@ namespace Huellitapp
             {
                 rootFrame.Navigate(typeof(PrincipalPage));
             }
-        }
-        
+        }       
 
         private async void iniciarSesion(object sender, RoutedEventArgs e)
         {
