@@ -57,6 +57,20 @@ namespace Huellitapp
             BitmapImage image = new BitmapImage(new Uri(mascota.Fotos.ElementAt(0).Url));
             brush.ImageSource = image;
             imagenMascota.Fill = brush;
+            pivotComentario.Header = "Comunicate con " + mascota.Nombre;
+        }
+
+        public Mascota Mascota
+        {
+            get
+            {
+                return mascota;
+            }
+            set
+            {
+                mascota = value;
+            }
+
         }
     }
 }
