@@ -1,6 +1,7 @@
 ﻿using Huellitapp.Models;
 using Parse;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -22,9 +23,16 @@ using Windows.UI.Xaml.Navigation;
 namespace Huellitapp
 {
    
-    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada, MisMascotasPage.IPrincipalPage
+    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada, MisMascotasPage.IPrincipalPage,AgregarMascotaPage.IPrincipalPage
     {
         private Frame rootFrame;
+
+        public interface IMisMascotasPage
+        {
+            void actualizarColleccionMascota(Mascota mascota);
+        }
+
+        IMisMascotasPage misMascotasPage;
 
         public interface IQuitarSeleccion
         {
@@ -102,6 +110,11 @@ namespace Huellitapp
             quitarSeleccion = interfaz;           
         }
 
+        public void setMisMascotasPage(IMisMascotasPage interfaz)
+        {
+            misMascotasPage = interfaz;
+        }
+
         private void seleccionMenu(object sender, SelectionChangedEventArgs e)
         {
             switch(menu.SelectedIndex)
@@ -131,23 +144,36 @@ namespace Huellitapp
             paginaPrincipal.BottomAppBar = null;
         }
 
-        public void ponerAppBarButton()
+        public void adultosPonerAppBarButton()
         {
             CommandBar commandBar = new CommandBar();
             AppBarButton appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Add);
             appBarButton.Label = "Agregar";
+            appBarButton.Click += agregarAdulto;
             commandBar.PrimaryCommands.Add(appBarButton);
             paginaPrincipal.BottomAppBar = commandBar;
         }
-        
 
-        public void seleccionarMascotaActiva()
+        public void cachorrosPonerAppBarButton()
+        {
+            CommandBar commandBar = new CommandBar();
+            AppBarButton appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Add);
+            appBarButton.Label = "Agregar";
+            appBarButton.Click += agregarCachorro;
+            commandBar.PrimaryCommands.Add(appBarButton);
+            paginaPrincipal.BottomAppBar = commandBar;
+        }
+
+
+        public void seleccionarAdultoActivo()
         {            
             CommandBar commandBar = new CommandBar();
             AppBarButton appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Add);
             appBarButton.Label = "Agregar";
+            appBarButton.Click += agregarAdulto;            
             commandBar.PrimaryCommands.Add(appBarButton);
             appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Delete);
@@ -159,5 +185,47 @@ namespace Huellitapp
             commandBar.PrimaryCommands.Add(appBarButton);
             paginaPrincipal.BottomAppBar = commandBar;
         }
+
+        public void seleccionarCachorroActivo()
+        {
+            CommandBar commandBar = new CommandBar();
+            AppBarButton appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Add);
+            appBarButton.Label = "Agregar";
+            appBarButton.Click += agregarCachorro;
+            commandBar.PrimaryCommands.Add(appBarButton);
+            appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Delete);
+            appBarButton.Label = "Eliminar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            appBarButton = new AppBarButton();
+            appBarButton.Icon = new SymbolIcon(Symbol.Edit);
+            appBarButton.Label = "Editar";
+            commandBar.PrimaryCommands.Add(appBarButton);
+            paginaPrincipal.BottomAppBar = commandBar;
+        }
+
+        private void agregarAdulto(object sender, RoutedEventArgs e)
+        {
+            ArrayList arrayList = new ArrayList();
+            arrayList.Add(this);
+            arrayList.Add("Adultos");
+            rootFrame.Navigate(typeof(AgregarMascotaPage),arrayList);
+        }
+
+        private void agregarCachorro(object sender, RoutedEventArgs e)
+        {
+            ArrayList arrayList = new ArrayList();
+            arrayList.Add(this);
+            arrayList.Add("Cachorros");
+            rootFrame.Navigate(typeof(AgregarMascotaPage), arrayList);
+        }
+
+        public void notificarSeAgregoLaMascota(Mascota mascota)
+        {
+            misMascotasPage.actualizarColleccionMascota(mascota);
+        }
+
+        
     }
 }

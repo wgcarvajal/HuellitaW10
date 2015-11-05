@@ -41,7 +41,7 @@ namespace Huellitapp
             if (e.Handled == false)
             {
                 e.Handled = true;
-                rootFrame.GoBack();
+                rootFrame.GoBack();                
             }
            
         }

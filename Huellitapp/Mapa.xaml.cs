@@ -36,16 +36,42 @@ namespace Huellitapp
             //ContentPanel.Children.Add(MyMap);
             //ContentPanel.Children.Add(MyMap);
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             // Specify a known location
             BasicGeoposition cityPosition = new BasicGeoposition() { Latitude = 2.459167, Longitude = -76.600278 };
             Geopoint cityCenter = new Geopoint(cityPosition);
 
+            var accessStatus = await Geolocator.RequestAccessAsync();
+            switch (accessStatus)
+            {
+                case GeolocationAccessStatus.Allowed:
+
+                    // Get the current location
+                    Geolocator geolocator = new Geolocator();
+                    Geoposition pos = await geolocator.GetGeopositionAsync();
+                    Geopoint myLocation = pos.Coordinate.Point;
+
+                    // Set map location
+                    MapControl1.Center = myLocation;
+                    MapControl1.ZoomLevel = 12;
+                    MapControl1.LandmarksVisible = true;
+                    break;
+
+                case GeolocationAccessStatus.Denied:
+                    // Handle when access to location is denied
+                    break;
+
+                case GeolocationAccessStatus.Unspecified:
+                    // Handle when an unspecified error occurs
+                    break;
+            }
+
+
             // Set map location
-            MapControl1.Center = cityCenter;
+            /*MapControl1.Center = cityCenter;
             MapControl1.ZoomLevel = 14;
-            MapControl1.LandmarksVisible = true;
+            MapControl1.LandmarksVisible = true;*/
         }
     }
 }

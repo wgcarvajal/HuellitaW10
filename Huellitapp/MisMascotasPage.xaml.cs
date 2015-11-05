@@ -23,7 +23,7 @@ namespace Huellitapp
     /// <summary>
     /// Una página vacía que se puede usar de forma independiente o a la que se puede navegar dentro de un objeto Frame.
     /// </summary>
-    public sealed partial class MisMascotasPage : Page
+    public sealed partial class MisMascotasPage : Page, PrincipalPage.IMisMascotasPage
     {
         private Frame rootFrame;
         private ObservableCollection<Mascota> mascotasAdultos;
@@ -37,14 +37,17 @@ namespace Huellitapp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            ((PrincipalPage)e.Parameter).setMisMascotasPage(this);
             principalPage = e.Parameter as IPrincipalPage;            
         }
 
         public interface IPrincipalPage
         {
             void quitarAppBarButton();
-            void ponerAppBarButton();
-            void seleccionarMascotaActiva();
+            void adultosPonerAppBarButton();
+            void cachorrosPonerAppBarButton();
+            void seleccionarAdultoActivo();
+            void seleccionarCachorroActivo();
         }
 
         IPrincipalPage principalPage;
@@ -151,7 +154,7 @@ namespace Huellitapp
         {
             if(gridMascotasAdultas.SelectedIndex!=-1)
             {
-                principalPage.seleccionarMascotaActiva();
+                principalPage.seleccionarAdultoActivo();
             }           
 
         }
@@ -160,7 +163,7 @@ namespace Huellitapp
         {
             if(gridMascotasCachorros.SelectedIndex!=-1)
             {
-                principalPage.seleccionarMascotaActiva();
+                principalPage.seleccionarCachorroActivo();
             }          
 
         }
@@ -173,12 +176,34 @@ namespace Huellitapp
                 principalPage.quitarAppBarButton();                
             }
             else
-            {               
-                principalPage.ponerAppBarButton();                
+            { 
+                if(pivote.SelectedIndex==0)
+                {
+                    principalPage.adultosPonerAppBarButton();
+                } 
+                else
+                {
+                    principalPage.cachorrosPonerAppBarButton();
+                }             
+                             
             }
             gridMascotasAdultas.SelectedIndex = -1;
             gridMascotasCachorros.SelectedIndex = -1;
         }
-        
+
+        public void actualizarColleccionMascota(Mascota mascota)
+        {
+            if(pivote.SelectedIndex==0)
+            {
+                mascotasAdultos.Add(mascota);
+            }
+            else
+            {
+                if(pivote.SelectedIndex==1)
+                {
+                    mascotasCachorros.Add(mascota);
+                }
+            }
+        }
     }
 }
