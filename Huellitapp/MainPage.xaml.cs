@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +33,11 @@ namespace Huellitapp
             
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+        }
+
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (ParseUser.CurrentUser != null)
@@ -55,6 +61,10 @@ namespace Huellitapp
             }
 
 
+        }
+        private void registrar(object sender, RoutedEventArgs e)
+        {
+            rootFrame.Navigate(typeof(RegistroPage));
         }
     }
 }
