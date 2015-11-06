@@ -108,6 +108,9 @@
     <Compile Include="ConfirmarEliminar.xaml.cs">
       <DependentUpon>ConfirmarEliminar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfirmarEliminarFoto.xaml.cs">
+      <DependentUpon>ConfirmarEliminarFoto.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditarMascotaPage.xaml.cs">
       <DependentUpon>EditarMascotaPage.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,7 @@
     <None Include="Huellitapp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\huellitapp.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -168,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConfirmarEliminar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfirmarEliminarFoto.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

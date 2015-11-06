@@ -24,7 +24,7 @@ namespace Huellitapp
     /// <summary>
     /// Una página vacía que se puede usar de forma independiente o a la que se puede navegar dentro de un objeto Frame.
     /// </summary>
-    public sealed partial class EditarMascotaPage : Page
+    public sealed partial class EditarMascotaPage : Page, ConfirmarEliminarFoto.IEditarMascotaPage
     {
         private Mascota mascota;
         Frame rootFrame;
@@ -32,7 +32,11 @@ namespace Huellitapp
         {
             this.InitializeComponent();
             rootFrame = Window.Current.Content as Frame;
+            Loaded += EditarMascotaPage_Loaded;
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+        private void EditarMascotaPage_Loaded(object sender, RoutedEventArgs e)
+        {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             SystemNavigationManager.GetForCurrentView().BackRequested += EditarMascotaPage_BackRequested;
         }
@@ -75,8 +79,13 @@ namespace Huellitapp
                 textAniosOmeses.Text = "Meses";
             }
 
-            textDescripcion.Text = mascota.Descripcion;
-
+            textDescripcion.Text = mascota.Descripcion; 
+            if(pivote.SelectedIndex==0)
+            {
+                pagina.BottomAppBar = null;
+            }          
+            gridEditarGaleria.SelectedIndex = -1;
+            
         }
         private void cargarComboEdad()
         {
@@ -131,12 +140,42 @@ namespace Huellitapp
             else
             {
                 pagina.BottomAppBar = null;
+                gridEditarGaleria.SelectedIndex = -1;
             }
         }
 
         private void agregarFoto(object sender, RoutedEventArgs e)
         {
             rootFrame.Navigate(typeof(AgregarFotoMascotaPage),mascota);
+        }
+
+        private void seleccionarFoto(object sender, SelectionChangedEventArgs e)
+        {
+            if(gridEditarGaleria.SelectedIndex!=-1)
+            {
+                CommandBar commandBar = new CommandBar();
+                AppBarButton appBarButton = new AppBarButton();
+                appBarButton.Icon = new SymbolIcon(Symbol.Add);
+                appBarButton.Label = "Agregar";
+                appBarButton.Click += agregarFoto;
+                commandBar.PrimaryCommands.Add(appBarButton);
+                appBarButton = new AppBarButton();
+                appBarButton.Icon = new SymbolIcon(Symbol.Delete);
+                appBarButton.Label = "Eliminar";
+                appBarButton.Click += eliminarFoto;
+                commandBar.PrimaryCommands.Add(appBarButton);
+                pagina.BottomAppBar = commandBar;
+            }
+        }
+
+        private void eliminarFoto(object sender, RoutedEventArgs e)
+        {
+            rootFrame.Navigate(typeof(ConfirmarEliminarFoto), mascota.Fotos.ElementAt(gridEditarGaleria.SelectedIndex));
+        }
+
+        public void aceptarEliminarFoto()
+        {
+            
         }
     }
 }

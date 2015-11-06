@@ -62,8 +62,9 @@
                 >
 
                 <GridView                    
-                    x:Name="gridMascotasAdultas"
-                    ItemsSource="{x:Bind Mascotta.Fotos}"                                       
+                    x:Name="gridEditarGaleria"
+                    ItemsSource="{x:Bind Mascotta.Fotos}" 
+                    SelectionChanged="seleccionarFoto"  
                     >
 
                     <GridView.ItemTemplate>
