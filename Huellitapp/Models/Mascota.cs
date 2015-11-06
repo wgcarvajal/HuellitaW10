@@ -1,29 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Huellitapp.Models
 {
-    public class Mascota
+    public class Mascota : INotifyPropertyChanged
     {
 
         public static string TABLA = "mascota";//nombre de la tabla en la base de datos
         //atributos de la tabla mascotas
-        public static string ID = "objectID";// identificador de la tabla mascota
+        public static string ID = "objectId";// identificador de la tabla mascota
         public static string NOMBRE = "masnombre";//nombre mascota
         public static string TIPO = "tiponombre";// tipo mascota Adultos o Cachorros
         public static string NOMBREUSUARIO = "username";//nombre de usuario del propietario actual de la mascota
+        public static string DESCRIPCION = "masdescripcion";
+        public static string EDAD = "masedad";
 
 
         private string id;
         private string nombre;       
         private string tipo;
         private string nombreUsuario;
+        private string descripcion;
+        private string descripcionCorta;
+        private string edad;
+        
         private ObservableCollection<FotoMascota> fotos;
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string Id
         {
@@ -46,6 +53,8 @@ namespace Huellitapp.Models
             set
             {
                 nombre = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("Nombre"));
             }
         }        
         public string Tipo
@@ -86,6 +95,49 @@ namespace Huellitapp.Models
                 fotos = value;
             }
         }
+
+        public string Descripcion
+        {
+            get
+            {
+                
+                return descripcion;
+            }
+            set
+            {
+                descripcion = value;
+            }
+        }
+
+        public string Edad
+        {
+            get
+            {
+                return edad;
+            }
+            set
+            {
+                edad = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("Edad"));
+            }
+        }
+
+        public string DescripcionCorta
+        {
+            get
+            {
+
+                return descripcionCorta;
+            }
+            set
+            {
+                descripcionCorta = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("DescripcionCorta"));
+            }
+        }
+
         
     }
     

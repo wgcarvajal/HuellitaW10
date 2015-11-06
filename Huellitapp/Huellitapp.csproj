@@ -96,11 +96,20 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgregarFotoMascotaPage.xaml.cs">
+      <DependentUpon>AgregarFotoMascotaPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AgregarMascotaPage.xaml.cs">
       <DependentUpon>AgregarMascotaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmarEliminar.xaml.cs">
+      <DependentUpon>ConfirmarEliminar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditarMascotaPage.xaml.cs">
+      <DependentUpon>EditarMascotaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -119,6 +128,7 @@
     </Compile>
     <Compile Include="Models\FotoMascota.cs" />
     <Compile Include="Models\Mascota.cs" />
+    <Compile Include="Models\Mensaje.cs" />
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="PrincipalPage.xaml.cs">
       <DependentUpon>PrincipalPage.xaml</DependentUpon>
@@ -149,7 +159,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="AgregarFotoMascotaPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AgregarMascotaPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConfirmarEliminar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditarMascotaPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

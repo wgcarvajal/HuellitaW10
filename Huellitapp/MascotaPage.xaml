@@ -13,19 +13,42 @@
         <Pivot        
             >
             <PivotItem
-                Header="Adultos"
+                Header="Descripción"
                 >
                 <StackPanel Padding="10">
                     <TextBlock x:Name="nombreMascota"
                            Style="{StaticResource HeaderTextBlockStyle}"
-                           Margin="0,0,0,10"
+                           Margin="0,0,0,5"
                            />
                     <Rectangle
                     x:Name="imagenMascota"
-                    Height="200"
+                    Height="180"
+                    Width="180"
                     Margin="0,0,0,10"
                     >
                     </Rectangle>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="0,0,0,10"
+                        >
+                        <TextBlock
+                        x:Name="textEdad"
+                        Style="{StaticResource SubtitleTextBlockStyle}"                        
+                        />
+                        <TextBlock
+                            x:Name="textmesoAnio"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Margin="10,0,0,0"
+                            />
+                    </StackPanel>
+                    <TextBlock
+                        x:Name="textDescripcion"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        TextWrapping="WrapWholeWords"
+                        Height="200"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        />
+                    
                 </StackPanel>
             </PivotItem>
             <PivotItem
@@ -48,7 +71,6 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-
             </PivotItem>
 
             <PivotItem
@@ -59,8 +81,48 @@
             <PivotItem
                 x:Name="pivotComentario"                
                 >
-                <ListBox 
-                    HorizontalAlignment="Center"/>
+                <StackPanel>
+                    <ListBox 
+                    x:Name="listaMensajes"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Height="300"
+                    Margin="0,20,0,0"
+                    ItemsSource="{x:Bind Mensajes}"                    
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:Mensaje">
+                                <StackPanel>
+                                    <TextBlock
+                                    Text="{x:Bind OrigenAlias}"
+                                    Margin="10,0,0,0"
+                                    FontWeight="Bold"                                    
+                                    />
+                                    <TextBlock
+                                    Text="{x:Bind Message}"
+                                    Margin="20,0,0,0"
+                                    FontSize="17"
+                                    TextWrapping="WrapWholeWords"
+                                    />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBox
+                        x:Name="textMensaje"
+                        PlaceholderText="Dejar un mensaje"
+                        Margin="0,20,0,0"/>
+                    <Button
+                        Margin="0,20,0,0"
+                        Width="100"
+                        Content="Enviar"
+                        HorizontalAlignment="Center"
+                        Click="btnEnviar"                        
+                        />
+                </StackPanel>
+                
+                
 
             </PivotItem>
         </Pivot>

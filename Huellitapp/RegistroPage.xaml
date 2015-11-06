@@ -8,7 +8,17 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+       <TextBlock 
+           Text="Registro"
+           Style="{StaticResource HeaderTextBlockStyle}"           
+           />
         <StackPanel VerticalAlignment="Center">
+            
+            <TextBox 
+                x:Name="nombre"
+                Margin="10"
+                PlaceholderText="Nombre y apellidos"
+                />
             <TextBox 
                 x:Name="usuario"
                 Margin="10"

@@ -1,0 +1,86 @@
+﻿<Page
+    x:Name="pagina"
+    x:Class="Huellitapp.EditarMascotaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Huellitapp"
+    xmlns:models="using:Huellitapp.Models"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Pivot
+            x:Name="pivote"
+            Title="Editar mascota" 
+            SelectionChanged="privoteSeleccionado"            
+            >
+            <PivotItem
+                Header="Editar descripción"
+                >
+                <StackPanel
+                    Margin="10">
+                    <TextBox
+                        x:Name="textNombre"
+                        PlaceholderText="Nombre de la mascota"
+                        Margin="0,0,0,10"
+                        />                    
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="0,0,0,10"
+                        >
+
+                        <ComboBox
+                            x:Name="comboEdad"
+                            Margin="0,0,10,0"                            
+                        />
+                        <TextBlock
+                            x:Name="textAniosOmeses" 
+                            Text="Meses"
+                            VerticalAlignment="Center"                            
+                            />
+
+                    </StackPanel>
+                    <TextBox
+                        x:Name="textDescripcion"
+                        Height="200"
+                        PlaceholderText="Descripción de la mascota"
+                        TextWrapping="Wrap"
+                        Margin="0,0,0,10"
+                        />
+                    
+                    <Button
+                        Content="Aceptar"
+                        HorizontalAlignment="Center" 
+                        Click="aceptarEdicion"                        
+                        />
+                </StackPanel>
+            </PivotItem>
+
+            <PivotItem
+                Header="Editar galeria"
+                >
+
+                <GridView                    
+                    x:Name="gridMascotasAdultas"
+                    ItemsSource="{x:Bind Mascotta.Fotos}"                                       
+                    >
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FotoMascota">
+
+                            <Rectangle Width="230" Height="230">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="{x:Bind Url}" Stretch="UniformToFill"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+            </PivotItem>
+        </Pivot>
+
+    </Grid>
+</Page>

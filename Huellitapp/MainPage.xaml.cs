@@ -51,7 +51,7 @@ namespace Huellitapp
 
             try
             {
-                await ParseUser.LogInAsync(user.Text, pass.Text);
+                await ParseUser.LogInAsync(user.Text, pass.Password);
                 rootFrame.Navigate(typeof(PrincipalPage));
 
             }

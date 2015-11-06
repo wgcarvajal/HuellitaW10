@@ -40,6 +40,22 @@ namespace Huellitapp
             rootFrame = Window.Current.Content as Frame;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             SystemNavigationManager.GetForCurrentView().BackRequested += AgregarMascotaPage_BackRequested;
+            Loaded += AgregarMascotaPage_Loaded;
+        }
+
+        private void AgregarMascotaPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            cargarComboEdad();
+        }
+
+        public void cargarComboEdad()
+        {
+           
+            for(int i=0;i<12;i++)
+            {
+                comboEdad.Items.Add((i + 1) + "");
+            }      
+            comboEdad.SelectedIndex=0;
         }
 
         public interface IPrincipalPage
@@ -63,6 +79,14 @@ namespace Huellitapp
             principalPage = arrayList[0] as IPrincipalPage;
             tipomascota =arrayList[1] as string;                 
             titulo.Text = "Agregar "+tipomascota;
+            if(tipomascota.Equals("Adultos"))
+            {
+                textEdad.Text = "Años";
+            }
+            else
+            {
+                textEdad.Text = "Meses";
+            }
         }
 
         private async void seleccionarImagen(object sender, RoutedEventArgs e)
@@ -92,7 +116,7 @@ namespace Huellitapp
 
         private async void btnAceptar(object sender, RoutedEventArgs e)
         {
-            if(file!=null && nombre.Text!="")
+            if(file !=null && nombre.Text !="" && descripcion.Text !="")
             {
                 var stream = await file.OpenAsync(FileAccessMode.Read);
 
@@ -107,12 +131,23 @@ namespace Huellitapp
                 mascota.Nombre = nombre.Text;
                 mascota.Tipo = tipomascota;
                 mascota.NombreUsuario = ParseUser.CurrentUser.Username;
-                
+                mascota.Descripcion = descripcion.Text;
+                mascota.Edad = comboEdad.SelectedItem as string;
+                if (descripcion.Text.Length>45)
+                {
+                    mascota.DescripcionCorta = descripcion.Text.Substring(0, 45);
+                }
+                else
+                {
+                    mascota.DescripcionCorta = descripcion.Text;
+                }
                 var parseMascota = new ParseObject(Mascota.TABLA)
                 {
                     { Mascota.TIPO, tipomascota },
                     { Mascota.NOMBRE, nombre.Text },
                     { Mascota.NOMBREUSUARIO, ParseUser.CurrentUser.Username},
+                    { Mascota.DESCRIPCION, descripcion.Text},
+                    { Mascota.EDAD, comboEdad.SelectedItem},
                 };
                 await parseMascota.SaveAsync();
                 mascota.Id = parseMascota.ObjectId;

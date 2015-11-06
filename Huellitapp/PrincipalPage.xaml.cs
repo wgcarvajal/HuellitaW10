@@ -23,13 +23,15 @@ using Windows.UI.Xaml.Navigation;
 namespace Huellitapp
 {
    
-    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada, MisMascotasPage.IPrincipalPage,AgregarMascotaPage.IPrincipalPage
+    public sealed partial class PrincipalPage : Page , MascotasPage.IMascotaSeleccionada, MisMascotasPage.IPrincipalPage,AgregarMascotaPage.IPrincipalPage,ConfirmarEliminar.IPrincipalPage
     {
         private Frame rootFrame;
+        private Mascota mascotaSeleccionada;
 
         public interface IMisMascotasPage
         {
             void actualizarColleccionMascota(Mascota mascota);
+            void eliminarMascotaSeleccionada();
         }
 
         IMisMascotasPage misMascotasPage;
@@ -167,8 +169,9 @@ namespace Huellitapp
         }
 
 
-        public void seleccionarAdultoActivo()
-        {            
+        public void seleccionarAdultoActivo(Mascota adulto)
+        {
+            mascotaSeleccionada = adulto;       
             CommandBar commandBar = new CommandBar();
             AppBarButton appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Add);
@@ -178,16 +181,19 @@ namespace Huellitapp
             appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Delete);
             appBarButton.Label = "Eliminar";
+            appBarButton.Click += eliminarMascota;
             commandBar.PrimaryCommands.Add(appBarButton);
             appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Edit);
             appBarButton.Label = "Editar";
+            appBarButton.Click += editarMascota;
             commandBar.PrimaryCommands.Add(appBarButton);
             paginaPrincipal.BottomAppBar = commandBar;
         }
 
-        public void seleccionarCachorroActivo()
+        public void seleccionarCachorroActivo(Mascota cachorro)
         {
+            mascotaSeleccionada = cachorro;
             CommandBar commandBar = new CommandBar();
             AppBarButton appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Add);
@@ -197,10 +203,12 @@ namespace Huellitapp
             appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Delete);
             appBarButton.Label = "Eliminar";
+            appBarButton.Click += eliminarMascota;
             commandBar.PrimaryCommands.Add(appBarButton);
             appBarButton = new AppBarButton();
             appBarButton.Icon = new SymbolIcon(Symbol.Edit);
             appBarButton.Label = "Editar";
+            appBarButton.Click += editarMascota;
             commandBar.PrimaryCommands.Add(appBarButton);
             paginaPrincipal.BottomAppBar = commandBar;
         }
@@ -221,11 +229,29 @@ namespace Huellitapp
             rootFrame.Navigate(typeof(AgregarMascotaPage), arrayList);
         }
 
+        private void eliminarMascota(object sender, RoutedEventArgs e)
+        {
+            ArrayList arrayList = new ArrayList();
+            arrayList.Add(this);
+            arrayList.Add(mascotaSeleccionada.Nombre);
+            rootFrame.Navigate(typeof(ConfirmarEliminar), arrayList);
+        }
+
+
+        private void editarMascota(object sender, RoutedEventArgs e)
+        {
+            rootFrame.Navigate(typeof(EditarMascotaPage), mascotaSeleccionada);
+        }
+
+
         public void notificarSeAgregoLaMascota(Mascota mascota)
         {
             misMascotasPage.actualizarColleccionMascota(mascota);
         }
 
-        
+        public void aceptarEliminar()
+        {
+            misMascotasPage.eliminarMascotaSeleccionada();
+        }
     }
 }

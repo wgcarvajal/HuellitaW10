@@ -22,7 +22,7 @@
                 Margin="10"
                 PlaceholderText="Nombre Usuario"
                 />
-            <TextBox
+            <PasswordBox
                 
                 x:Name="pass"
                 Margin="10"

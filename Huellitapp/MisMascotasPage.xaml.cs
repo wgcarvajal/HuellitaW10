@@ -46,8 +46,8 @@ namespace Huellitapp
             void quitarAppBarButton();
             void adultosPonerAppBarButton();
             void cachorrosPonerAppBarButton();
-            void seleccionarAdultoActivo();
-            void seleccionarCachorroActivo();
+            void seleccionarAdultoActivo(Mascota adulto);
+            void seleccionarCachorroActivo(Mascota cachorro);
         }
 
         IPrincipalPage principalPage;
@@ -92,7 +92,8 @@ namespace Huellitapp
         {
 
             var query = ParseObject.GetQuery(Mascota.TABLA)
-            .WhereEqualTo(Mascota.TIPO, "Adultos");
+            .WhereEqualTo(Mascota.TIPO, "Adultos")
+            .WhereEqualTo("username",ParseUser.CurrentUser.Username);
             IEnumerable<ParseObject> results = await query.FindAsync();
             foreach (ParseObject parseObject in results)
             {
@@ -113,6 +114,16 @@ namespace Huellitapp
                 mascota.Tipo = (string)parseObject[Mascota.TIPO];
                 mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
                 mascota.Id = parseObject.ObjectId;
+                mascota.Descripcion = (string)parseObject[Mascota.DESCRIPCION];
+                if (mascota.Descripcion.Length > 45)
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion.Substring(0, 45) + " . . . .";
+                }
+                else
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion;
+                }
+                mascota.Edad = (string)parseObject[Mascota.EDAD] + " años";
                 mascota.Fotos = fotosMascotas;
                 mascotasAdultos.Add(mascota);
             }
@@ -123,7 +134,8 @@ namespace Huellitapp
         {
 
             var query = ParseObject.GetQuery(Mascota.TABLA)
-            .WhereEqualTo(Mascota.TIPO, "Cachorros");
+            .WhereEqualTo(Mascota.TIPO, "Cachorros")
+            .WhereEqualTo("username", ParseUser.CurrentUser.Username);
             IEnumerable<ParseObject> results = await query.FindAsync();
             foreach (ParseObject parseObject in results)
             {
@@ -144,6 +156,16 @@ namespace Huellitapp
                 mascota.Tipo = (string)parseObject[Mascota.TIPO];
                 mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
                 mascota.Id = parseObject.ObjectId;
+                mascota.Descripcion = (string)parseObject[Mascota.DESCRIPCION];
+                if (mascota.Descripcion.Length > 45)
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion.Substring(0, 45) + " . . . .";
+                }
+                else
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion;
+                }
+                mascota.Edad = (string)parseObject[Mascota.EDAD] + " meses";
                 mascota.Fotos = fotosMascotas;
                 mascotasCachorros.Add(mascota);
             }
@@ -154,7 +176,7 @@ namespace Huellitapp
         {
             if(gridMascotasAdultas.SelectedIndex!=-1)
             {
-                principalPage.seleccionarAdultoActivo();
+                principalPage.seleccionarAdultoActivo(mascotasAdultos.ElementAt(gridMascotasAdultas.SelectedIndex));
             }           
 
         }
@@ -163,7 +185,7 @@ namespace Huellitapp
         {
             if(gridMascotasCachorros.SelectedIndex!=-1)
             {
-                principalPage.seleccionarCachorroActivo();
+                principalPage.seleccionarCachorroActivo(mascotasCachorros.ElementAt(gridMascotasCachorros.SelectedIndex));
             }          
 
         }
@@ -203,6 +225,54 @@ namespace Huellitapp
                 {
                     mascotasCachorros.Add(mascota);
                 }
+            }
+        }
+
+        public void eliminarMascotaSeleccionada()
+        {
+            Mascota mascota;
+            if (gridMascotasAdultas.SelectedIndex!=-1)
+            {
+                mascota = mascotasAdultos.ElementAt(gridMascotasAdultas.SelectedIndex);
+                mascotasAdultos.RemoveAt(gridMascotasAdultas.SelectedIndex);
+                principalPage.adultosPonerAppBarButton();
+            }
+            else
+            {
+                mascota = mascotasCachorros.ElementAt(gridMascotasCachorros.SelectedIndex);
+                mascotasCachorros.RemoveAt(gridMascotasCachorros.SelectedIndex);
+                principalPage.cachorrosPonerAppBarButton();
+            }
+            eliminarMascota(mascota);
+            gridMascotasAdultas.SelectedIndex = -1;
+            gridMascotasCachorros.SelectedIndex = -1;
+        }
+
+        private async void eliminarMascota(Mascota mascota)
+        {
+            var dlg = new Windows.UI.Popups.MessageDialog(mascota.Id);
+            await dlg.ShowAsync();
+            var queryMascota = ParseObject.GetQuery(Mascota.TABLA)
+            .WhereEqualTo(Mascota.ID, mascota.Id);
+            IEnumerable<ParseObject> mascotas = await queryMascota.FindAsync();
+            foreach(ParseObject m in mascotas)
+            {
+                await m.DeleteAsync();
+            }
+            
+            var queryMensaje = ParseObject.GetQuery(Mensaje.TABLA)
+            .WhereEqualTo(Mensaje.MASCOTA, mascota.Id);
+            IEnumerable<ParseObject> mensajes = await queryMensaje.FindAsync();
+            foreach(ParseObject mensaje in mensajes)
+            {
+                await mensaje.DeleteAsync();
+            }
+            var queryFoto = ParseObject.GetQuery(FotoMascota.TABLA)
+            .WhereEqualTo(FotoMascota.IDMASCOTA, mascota.Id);
+            IEnumerable<ParseObject> fotos = await queryFoto.FindAsync();
+            foreach (ParseObject foto in fotos)
+            {
+                await foto.DeleteAsync();
             }
         }
     }

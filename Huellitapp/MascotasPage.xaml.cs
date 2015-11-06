@@ -93,7 +93,8 @@ namespace Huellitapp
         {
 
             var query = ParseObject.GetQuery(Mascota.TABLA)
-            .WhereEqualTo(Mascota.TIPO,"Adultos");
+            .WhereEqualTo(Mascota.TIPO, "Adultos")
+            .WhereNotEqualTo(Mascota.NOMBREUSUARIO,ParseUser.CurrentUser.Username);
             IEnumerable<ParseObject> results = await query.FindAsync();                        
             foreach(ParseObject parseObject in results)
             {
@@ -114,6 +115,16 @@ namespace Huellitapp
                 mascota.Tipo = (string)parseObject[Mascota.TIPO];
                 mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
                 mascota.Id = parseObject.ObjectId;
+                mascota.Descripcion = (string)parseObject[Mascota.DESCRIPCION];
+                if (mascota.Descripcion.Length > 45)
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion.Substring(0,45)+" . . . .";
+                }
+                else
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion;
+                }                
+                mascota.Edad = (string)parseObject[Mascota.EDAD] +" Años";
                 mascota.Fotos = fotosMascotas;               
                 mascotasAdultos.Add(mascota);
             }            
@@ -124,7 +135,8 @@ namespace Huellitapp
         {
 
             var query = ParseObject.GetQuery(Mascota.TABLA)
-            .WhereEqualTo(Mascota.TIPO, "Cachorros");
+            .WhereEqualTo(Mascota.TIPO, "Cachorros")
+            .WhereNotEqualTo(Mascota.NOMBREUSUARIO, ParseUser.CurrentUser.Username);
             IEnumerable<ParseObject> results = await query.FindAsync();
             foreach (ParseObject parseObject in results)
             {
@@ -145,6 +157,16 @@ namespace Huellitapp
                 mascota.Tipo = (string)parseObject[Mascota.TIPO];
                 mascota.NombreUsuario = (string)parseObject[Mascota.NOMBREUSUARIO];
                 mascota.Id = parseObject.ObjectId;
+                mascota.Descripcion = (string)parseObject[Mascota.DESCRIPCION];
+                if(mascota.Descripcion.Length > 45)
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion.Substring(0, 45)+" . . . .";
+                }
+                else
+                {
+                    mascota.DescripcionCorta = mascota.Descripcion;
+                }
+                mascota.Edad = (string)parseObject[Mascota.EDAD] + " Meses";
                 mascota.Fotos = fotosMascotas;
                 mascotasCachorros.Add(mascota);
             }

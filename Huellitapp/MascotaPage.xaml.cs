@@ -1,6 +1,8 @@
 ﻿using Huellitapp.Models;
+using Parse;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,6 +29,8 @@ namespace Huellitapp
     {
         private Frame rootFrame;
         private Mascota mascota;
+        private ObservableCollection<Mensaje> mensajes;     
+
 
         public MascotaPage()
         {
@@ -34,6 +38,36 @@ namespace Huellitapp
             rootFrame = Window.Current.Content as Frame;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             SystemNavigationManager.GetForCurrentView().BackRequested += MascotaPage_BackRequested;
+        }
+
+        public Mascota Mascota
+        {
+            get
+            {
+                return mascota;
+            }
+            set
+            {
+                mascota = value;
+            }
+
+        }
+
+        public ObservableCollection<Mensaje> Mensajes
+        {
+            get
+            {
+                if (mensajes == null)
+                {
+                    mensajes = new ObservableCollection<Mensaje>();
+                    loadMensajes();
+                }
+                return mensajes;
+            }
+            set
+            {
+                mensajes = value;
+            }
         }
 
         private void MascotaPage_BackRequested(object sender, BackRequestedEventArgs e)
@@ -50,6 +84,17 @@ namespace Huellitapp
         {
             mascota = e.Parameter as Mascota;
             nombreMascota.Text = mascota.Nombre;
+            int index = mascota.Edad.IndexOf(" ");
+            textEdad.Text = mascota.Edad.Substring(0,index);
+            textDescripcion.Text = mascota.Descripcion;
+            if(mascota.Tipo.Equals("Adultos"))
+            {
+                textmesoAnio.Text = "Años";
+            }
+            else
+            {
+                textmesoAnio.Text = "Meses";
+            }
 
             ImageBrush brush = new ImageBrush();
             brush.Stretch = Stretch.Uniform;
@@ -57,20 +102,78 @@ namespace Huellitapp
             BitmapImage image = new BitmapImage(new Uri(mascota.Fotos.ElementAt(0).Url));
             brush.ImageSource = image;
             imagenMascota.Fill = brush;
+
             pivotComentario.Header = "Comunicate con " + mascota.Nombre;
         }
-
-        public Mascota Mascota
+        
+        private async void loadMensajes()
         {
-            get
-            {
-                return mascota;
-            }
-            set
-            {
-                mascota = value;
-            }
+           
+            var queryDueno = ParseUser.Query
+            .WhereEqualTo("username", mascota.NombreUsuario);
+            IEnumerable<ParseUser> duenoResults = await queryDueno.FindAsync();
+            ParseUser dueno = duenoResults.First();
 
+
+
+            var query = ParseObject.GetQuery(Mensaje.TABLA)
+            .WhereEqualTo(Mensaje.MASCOTA, mascota.Id)
+            .WhereEqualTo(Mensaje.ORIGEN, ParseUser.CurrentUser.Username);
+
+            var query2 = ParseObject.GetQuery(Mensaje.TABLA)
+            .WhereEqualTo(Mensaje.MASCOTA, mascota.Id)
+            .WhereEqualTo(Mensaje.DESTINO, ParseUser.CurrentUser.Username)
+            .Or(query)
+            .OrderBy(Mensaje.FECHA);           
+
+            IEnumerable<ParseObject> results = await query2.FindAsync();
+            foreach(ParseObject msg in results)
+            {               
+                Mensaje mensaje = new Mensaje();
+                mensaje.Message = (string)msg[Mensaje.MENSAJE];                
+                mensaje.Mascota = mascota;               
+                if (((String)msg[Mensaje.ORIGEN]).Equals(ParseUser.CurrentUser.Username))
+                {
+                    mensaje.Origen = ParseUser.CurrentUser;
+                    mensaje.OrigenAlias = "Tú";
+                    mensaje.Destino = dueno;
+                }
+                else
+                {
+                    mensaje.Origen = dueno;
+                    mensaje.OrigenAlias = "Cuidador de "+ mascota.Nombre;
+                    mensaje.Destino = ParseUser.CurrentUser;
+                }
+                mensajes.Add(mensaje);               
+            }
+        }
+
+        private async void btnEnviar(object sender, RoutedEventArgs e)
+        {
+            if(textMensaje.Text!="")
+            {
+                Mensaje mensaje = new Mensaje();
+                mensaje.Mascota = mascota;
+                mensaje.Origen = ParseUser.CurrentUser;
+                mensaje.OrigenAlias = "Tú";
+                var queryDueno = ParseUser.Query
+                .WhereEqualTo("username", mascota.NombreUsuario);
+                IEnumerable<ParseUser> duenoResults = await queryDueno.FindAsync();
+                ParseUser dueno = duenoResults.First();
+                mensaje.Destino = dueno;
+                mensaje.Message = textMensaje.Text;
+                textMensaje.Text = "";
+                mensajes.Add(mensaje);
+                var parseMensaje = new ParseObject(Mensaje.TABLA)
+                {
+                    { Mensaje.MASCOTA, mascota.Id },
+                    { Mensaje.MENSAJE, mensaje.Message },
+                    { Mensaje.DESTINO, dueno.Username},
+                    { Mensaje.ORIGEN, ParseUser.CurrentUser.Username},
+                };
+                await parseMensaje.SaveAsync();
+            }
         }
     }
+    
 }

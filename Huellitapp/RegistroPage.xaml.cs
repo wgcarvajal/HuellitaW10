@@ -57,8 +57,9 @@ namespace Huellitapp
             {
                 Username = usuario.Text,
                 Password = password.Password,
-                Email = email.Text
+                Email = email.Text,                
             };
+            user["nombre"] = nombre.Text;
             if(usuario.Text!="")
             {
                 var query = ParseObject.GetQuery("User").WhereEqualTo("username", usuario.Text);
@@ -97,6 +98,12 @@ namespace Huellitapp
             {
                 bandera = 1;
                 var dlg = new Windows.UI.Popups.MessageDialog("Digite su contraseña por favor");
+                await dlg.ShowAsync();
+            }
+            if (nombre.Text == "")
+            {
+                bandera = 1;
+                var dlg = new Windows.UI.Popups.MessageDialog("Digite nombre por favor");
                 await dlg.ShowAsync();
             }
             if (bandera==0)

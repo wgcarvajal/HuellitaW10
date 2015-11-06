@@ -27,24 +27,42 @@
 
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="models:Mascota">
-                            <RelativePanel Width="130" Height="130" Margin="10">
-                                <Rectangle Width="130" Height="130">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Width="130" Height="130"
+                                         Grid.Column="0"  >
                                     <Rectangle.Fill>
                                         <ImageBrush ImageSource="{x:Bind Fotos[0].Url}" Stretch="UniformToFill"/>
                                     </Rectangle.Fill>
                                 </Rectangle>
-
-                                <StackPanel Background="#99000000"
-                                            RelativePanel.AlignBottomWithPanel="True"
-                                            Padding="4"
+                                <StackPanel 
+                                        Grid.Column="1"
+                                        Margin="5,0,0,0"
+                                        Background="#99000000"
+                                        VerticalAlignment="Center"
+                                        Padding="4"
                                             >
-                                    <TextBlock  Width="130" 
-                                         
-                                         Text="{x:Bind Nombre}"
-                                         Foreground="White"
+                                    <TextBlock
+                                                                              
+                                        Text="{x:Bind Nombre, Mode=TwoWay}"
+                                        Foreground="White"
                                          />
+                                    <TextBlock
+                                       Text="{x:Bind Edad, Mode=TwoWay}"
+                                        Foreground="White"
+                                        Margin="0,0,0,5"
+                                        />
+                                    <TextBlock 
+                                        Width="150"
+                                        TextWrapping="WrapWholeWords"                                        
+                                        Text="{x:Bind DescripcionCorta, Mode=TwoWay}"
+                                        Foreground="White"
+                                        />
                                 </StackPanel>
-                            </RelativePanel>
+                            </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
@@ -63,24 +81,41 @@
 
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="models:Mascota">
-                            <RelativePanel Width="130" Height="130" Margin="10">
-                                <Rectangle Width="130" Height="130">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Width="130" Height="130"
+                                         Grid.Column="0"  >
                                     <Rectangle.Fill>
                                         <ImageBrush ImageSource="{x:Bind Fotos[0].Url}" Stretch="UniformToFill"/>
                                     </Rectangle.Fill>
                                 </Rectangle>
-
-                                <StackPanel Background="#99000000"
-                                            RelativePanel.AlignBottomWithPanel="True"
-                                            Padding="4"
+                                <StackPanel 
+                                        Grid.Column="1"
+                                        Background="#99000000"
+                                        VerticalAlignment="Center"
+                                        Padding="4"
+                                        Margin="5,0,0,0"
                                             >
-                                    <TextBlock  Width="130" 
-                                         
-                                         Text="{x:Bind Nombre}"
-                                         Foreground="White"
+                                    <TextBlock                                                                              
+                                        Text="{x:Bind Nombre, Mode=TwoWay}"
+                                        Foreground="White"
                                          />
+                                    <TextBlock
+                                       Text="{x:Bind Edad, Mode=TwoWay}"
+                                        Foreground="White"
+                                        Margin="0,0,0,5"
+                                        />
+                                    <TextBlock
+                                        Width="150"
+                                        TextWrapping="WrapWholeWords"
+                                        Text="{x:Bind DescripcionCorta, Mode=TwoWay}"
+                                        Foreground="White"
+                                        />
                                 </StackPanel>
-                            </RelativePanel>
+                            </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
